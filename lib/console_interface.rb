@@ -1,3 +1,5 @@
+require 'colorized_string'
+
 class ConsoleInterface
   # В константе FIGURES будут лежать все текстовые файлы из папки figures,
   # помещённые в массив. Один элемент массива — одна строка с содержимым целого
@@ -19,18 +21,15 @@ class ConsoleInterface
   # Выводит в консоль текущее состояние игры, используя данные из экземпляра
   # класса Game (количество ошибок, сколько осталось попыток и т.д.)
   def print_out
-    puts <<~END
-      Слово: #{word_to_show}
-      #{figure}
-      Ошибки (#{@game.errors_made}): #{errors_to_show}
-      У вас осталось ошибок: #{@game.errors_allowed}
-
-    END
+    puts ColorizedString["Слово: #{word_to_show}"].colorize(:light_blue)
+    puts ColorizedString["#{figure}"].colorize(:yellow)
+    puts ColorizedString["Ошибки (#{@game.errors_made}): #{errors_to_show}"].colorize(:light_red)
+    puts "У вас осталось ошибок: #{@game.errors_allowed}"
 
     if @game.won?
-      puts "Поздравляем, вы выиграли!"
+      puts ColorizedString["Поздравляем, вы выиграли!"].colorize(:blue)
     elsif @game.lost?
-      puts "Вы проиграли, загаданное слово: #{@game.word}"
+      puts ColorizedString["Вы проиграли, загаданное слово: #{@game.word}"].red.blink
     end
   end
 
@@ -73,7 +72,7 @@ class ConsoleInterface
   # Получает букву из пользовательского ввода, приводит её к верхнему регистру
   # и возвращает её
   def get_input
-    print "Введите следующую букву: "
+    print ColorizedString["Введите следующую букву: "].colorize(:light_blue)
     letter = gets[0].upcase
     letter
   end
